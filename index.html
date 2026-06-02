@@ -28,7 +28,7 @@
             margin: 0 auto;
         }
 
-        /* Encabezado idéntico al PDF */
+        /* Encabezado */
         .pdf-header {
             background-color: var(--primary-color);
             color: white;
@@ -63,7 +63,7 @@
             font-style: italic;
         }
 
-        /* Buscador y Filtros */
+        /* Filtro por Casa de Tango */
         .filter-container {
             background: white;
             padding: 15px 20px;
@@ -91,19 +91,24 @@
             background-color: #fff;
         }
 
-        /* Estructura de Tabla */
+        /* ==========================================================================
+           MAGIA DE LA TABLA HORIZONTAL CON DESPLAZAMIENTO (SCROLL)
+           ========================================================================== */
         .table-responsive {
             background: white;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            overflow: hidden;
+            overflow-x: auto; /* Activa la barra de desplazamiento horizontal */
+            -webkit-overflow-scrolling: touch; /* Suaviza el deslizado con el dedo en iPhone/Android */
             margin-bottom: 30px;
+            border: 1px solid #eeeff2;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
+            min-width: 950px; /* Fuerza a la tabla a no achicarse y mantener sus columnas anchas */
         }
 
         th {
@@ -114,33 +119,43 @@
             font-size: 13px;
             letter-spacing: 0.5px;
             padding: 16px;
+            white-space: nowrap; /* Evita que los títulos salten de línea */
         }
 
         td {
             padding: 16px;
             border-bottom: 1px solid #eeeff2;
-            font-size: 15px;
+            font-size: 14.5px;
+            vertical-align: top;
         }
 
         tr:hover {
             background-color: #fdfafb;
         }
 
-        /* Clases de diseño internas */
+        /* Ancho fijo para las columnas para que queden prolijas al desplazar */
+        th:nth-child(1), td:nth-child(1) { width: 180px; } /* Casa */
+        th:nth-child(2), td:nth-child(2) { width: 220px; } /* Servicio */
+        th:nth-child(3), td:nth-child(3) { width: 80px;  } /* Moneda */
+        th:nth-child(4), td:nth-child(4) { width: 120px; } /* Neto */
+        th:nth-child(5), td:nth-child(5) { width: 140px; } /* Público */
+        
         .price-neto {
             color: var(--neto-color);
             font-weight: bold;
+            white-space: nowrap;
         }
 
         .price-publico {
             color: var(--publico-color);
             font-weight: bold;
+            white-space: nowrap;
         }
 
         .notes {
-            font-size: 13.5px;
+            font-size: 13px;
             color: #555;
-            line-height: 1.4;
+            line-height: 1.45;
         }
 
         .loading {
@@ -150,7 +165,18 @@
             color: #95a5a6;
         }
 
-        /* Sección de Condiciones Finales del PDF */
+        /* Indicador visual de scroll para celular */
+        .scroll-hint {
+            display: none;
+            text-align: right;
+            font-size: 12px;
+            color: #7f8c8d;
+            margin-top: -15px;
+            margin-bottom: 10px;
+            font-style: italic;
+        }
+
+        /* Condiciones Finales */
         .pdf-footer-info {
             background: #fff;
             padding: 25px;
@@ -174,81 +200,17 @@
             padding-bottom: 5px;
         }
 
-        .footer-section p, .footer-section ul {
+        .footer-section p {
             font-size: 13.5px;
             color: #555;
             margin: 5px 0;
             line-height: 1.5;
         }
 
-        /* ==========================================================================
-           MÁGICA RESPONSIVA: Adaptación estricta para Celulares
-           ========================================================================== */
+        /* Ajustes menores de fuentes en pantallas chicas */
         @media screen and (max-width: 768px) {
-            /* Forzar a la tabla a comportarse como bloques separados (Tarjetas) */
-            table, thead, tbody, th, td, tr {
-                display: block;
-            }
-
-            /* Ocultar las cabeceras originales en el celular */
-            thead tr {
-                position: absolute;
-                top: -9999px;
-                left: -9999px;
-            }
-
-            tr {
-                background: #fff;
-                border: 1px solid #e6e6e6;
-                border-radius: 10px;
-                margin-bottom: 20px;
-                padding: 10px 15px;
-                box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-            }
-
-            tr:hover {
-                background-color: #fff;
-            }
-
-            td {
-                border: none;
-                border-bottom: 1px solid #f5f5f5;
-                position: relative;
-                padding-left: 45% !important;
-                text-align: right !important;
-                padding: 12px 5px !important;
-            }
-
-            td:last-child {
-                border-bottom: none;
-                text-align: left !important;
-                padding-left: 0 !important;
-                margin-top: 10px;
-            }
-
-            /* Inyectar dinámicamente los títulos de las columnas a la izquierda */
-            td:before {
-                content: attr(data-label);
-                position: absolute;
-                left: 5px;
-                width: 40%;
-                text-align: left;
-                font-weight: 700;
-                color: var(--secondary-color);
-                font-size: 13px;
-                text-transform: uppercase;
-            }
-
-            td:last-child:before {
-                position: static;
-                display: block;
-                width: 100%;
-                margin-bottom: 5px;
-            }
-            
-            .pdf-header h1 {
-                font-size: 18px;
-            }
+            .pdf-header h1 { font-size: 18px; }
+            .scroll-hint { display: block; } /* Muestra "Deslizar para ver más →" sólo en móviles */
         }
     </style>
 </head>
@@ -268,6 +230,8 @@
             <option value="todos">Cargando base de datos...</option>
         </select>
     </div>
+
+    <div class="scroll-hint">Desliza hacia los lados para ver toda la tabla de precios ↔</div>
 
     <div class="table-responsive">
         <table>
@@ -306,11 +270,10 @@
 </div>
 
 <script>
-    // URL DE TU GOOGLE SHEETS (Vuelve a pegar aquí tu enlace TSV)
+    // URL DE TU GOOGLE SHEETS
     const tsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSZD4IWIHbZQuHJMRA-S0NbVcyAX8xtvXIHCNEeZHECl0reRsYlUbI6LF0vlZZMguGN_AGXYopVKmy8/pub?gid=979722544&single=true&output=tsv'; 
     
     let todasLasTarifas = [];
-    const columnasLabels = ["Casa de Tango", "Servicio", "Moneda", "Neto c/Imp.", "Sugerido Público", "Notas y Traslados"];
 
     async function obtenerDatos() {
         try {
@@ -327,7 +290,7 @@
             console.error("Error al leer Google Sheets:", error);
             document.getElementById('table-body').innerHTML = `
                 <tr><td colspan="6" style="color:red; text-align:center; padding:20px;">
-                    Error al cargar el tarifario. Asegúrate de haber colocado tu enlace de Google Sheets (TSV) correctamente.
+                    Error al cargar el tarifario. Asegúrate de colocar tu enlace de Google Sheets (TSV) correctamente.
                 </td></tr>`;
         }
     }
@@ -360,27 +323,19 @@
             const moneda = cleanText(row[2]);
             const sim = moneda.includes('USD') ? 'USD ' : '$ ';
             
-            // Estructurar el contenido asignando etiquetas responsivas
-            const cCasa = `<b>${cleanText(row[0])}</b>`;
-            const cServicio = cleanText(row[1]);
-            const cMoneda = moneda;
-            const cNeto = `<span class="price-neto">${sim}${cleanText(row[3])}</span>`;
-            const cPublico = `<span class="price-publico">${sim}${cleanText(row[4])}</span>`;
-            const cNotas = `<span class="notes">${row[5] ? cleanText(row[5]) : '-'}</span>`;
-
-            const cArr = [cCasa, cServicio, cMoneda, cNeto, cPublico, cNotas];
-
-            cArr.forEach((htmlCont, index) => {
-                const td = document.createElement('td');
-                td.innerHTML = htmlCont;
-                td.setAttribute('data-label', columnasLabels[index]); // Esto genera la magia móvil
-                tr.appendChild(td);
-            });
-
+            tr.innerHTML = `
+                <td><b>${cleanText(row[0])}</b></td>
+                <td>${cleanText(row[1])}</td>
+                <td>${moneda}</td>
+                <td class="price-neto">${sim}${cleanText(row[3])}</td>
+                <td class="price-publico">${sim}${cleanText(row[4])}</td>
+                <td class="notes">${row[5] ? cleanText(row[5]) : '-'}</td>
+            `;
             tbody.appendChild(tr);
         });
     }
 
+    // Limpieza de caracteres extraños de Google Sheets
     function cleanText(text) {
         return text ? text.trim().replace(/^"|"$/g, '') : '';
     }
